@@ -11,6 +11,6 @@ RUN apt-get update && \
 
 COPY ./target .
 
-EXPOSE 8080
+EXPOSE 7990
 
 ENTRYPOINT ["java", "-jar", "/app/mpm-recent.jar"]
