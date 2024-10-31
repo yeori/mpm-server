@@ -34,11 +34,13 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: Upload JAR Artifact
+      - name: Upload JAR and Dockerfile
         uses: actions/upload-artifact@v4
         with:
           name: mpm-recent-jar
-          path: target/mpm-recent.jar
+          path: |
+            target/mpm-recent.jar
+            Dockerfile
 
   deploy:
     needs: build
@@ -61,5 +63,7 @@ jobs:
           name: mpm-recent-jar
       - name: List of Files
         run: ls -alh .
-      - name: Sending jar file
+      - name: Sending jar
         run: rsync --archive --verbose --stats mpm-recent.jar ${{secrets.SSH_TOYBOX_DST}}
+      - name: Sending Dockerfile
+        run: rsync --archive --verbose --stats Dockerfile ${{secrets.SSH_TOYBOX_DST}}
