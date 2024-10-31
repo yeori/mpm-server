@@ -64,6 +64,6 @@ jobs:
       - name: List of Files
         run: ls -alh .
       - name: Sending jar
-        run: rsync --archive --verbose --stats mpm-recent.jar ${{secrets.SSH_TOYBOX_DST}}
+        run: rsync --archive --verbose --stats target/mpm-recent.jar ${{secrets.SSH_TOYBOX_DST}}
       - name: Sending Dockerfile
         run: rsync --archive --verbose --stats Dockerfile ${{secrets.SSH_TOYBOX_DST}}
