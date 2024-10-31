@@ -71,7 +71,7 @@ public class MorphemeService {
           token.setDefaultText(decomposed.get(0).getDefaultText() + "다");
         }
       }
-      if (target.contains(token.inferMainPumsa())) {
+      if (target == null || target.contains(token.inferMainPumsa())) {
         tokens.add(token);
       }
     }
