@@ -39,3 +39,27 @@ jobs:
         with:
           name: mpm-recent-jar
           path: target/mpm-recent.jar
+
+  deploy:
+    needs: build
+    name: Deploy mpm-recent.jar to Toybox
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install SSH Key
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          ssh-keyscan -t rsa $SSH_HOST_IP >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+        shell: bash
+        env:
+          SSH_FINGERPRINT: ${{secrets.SSH_TOYBOX_FP}}
+          SSH_PRIVATE_KEY: ${{secrets.SSH_TOYBOX_PRIVATE}}
+          SSH_HOST_IP: ${{secrets.SSH_TOYBOX_HOST}}
+      - uses: actions/download-artifact@v4
+        with:
+          name: mpm-recent-jar
+      - name: List of Files
+        run: ls -alh .
+      - name: Sending jar file
+        run: rsync --archive --verbose --stats mpm-recent.jar ${{secrets.SSH_TOYBOX_DST}}
