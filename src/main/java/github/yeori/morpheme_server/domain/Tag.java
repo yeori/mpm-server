@@ -1,5 +1,9 @@
 package github.yeori.morpheme_server.domain;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Map.Entry;
+
 public enum Tag {
   NNG("일반 명사"),
   NNP("고유 명사"),
@@ -48,11 +52,13 @@ public enum Tag {
   private final String description;
 
   Tag(String description) {
-      this.description = description;
+    this.description = description;
   }
+
   public String getDescription() {
-      return description;
+    return description;
   }
+
   public static Tag findTag(String tagName) {
     for (Tag tag : Tag.values()) {
       if (tag.name().equalsIgnoreCase(tagName)) {
@@ -60,5 +66,11 @@ public enum Tag {
       }
     }
     return null; // or you can throw an IllegalArgumentException if preferred
+  }
+
+  public static Map<String, String> toMap() {
+    Entry<String, String>[] entries = Arrays.stream(Tag.values())
+        .map(tag -> Map.entry(tag.name(), tag.getDescription())).toArray(Map.Entry[]::new);
+    return Map.ofEntries(entries);
   }
 }

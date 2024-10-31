@@ -22,6 +22,7 @@ import scala.collection.JavaConversions;
 public class MorphemeService {
 
   private final AtomicBoolean initialized = new AtomicBoolean(false); // Thread-safe property
+  private final static Set<String> VERB = Set.of("VV", "VA");
 
   @PostConstruct
   public void init() {
@@ -64,11 +65,14 @@ public class MorphemeService {
       Token token = Token.from(word, feather);
       String mType = mm.getMType().toString(); // COMMON, INFLECT,
       if ("COMMON".equals(mType)) {
+        if (VERB.contains(feather)) {
+          token.setSurface(token.getSurface() + "다");
+        }
       } else {
         var decomposed = this.decomposeMorpheme(mm);
         token.setDecomposed(decomposed);
         if ("INFLECT".equals(mType)) {
-          token.setDefaultText(decomposed.get(0).getDefaultText() + "다");
+          token.setSurface(decomposed.get(0).getSurface() + "다");
         }
       }
       if (target == null || target.contains(token.inferMainPumsa())) {

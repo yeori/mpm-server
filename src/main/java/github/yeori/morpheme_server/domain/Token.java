@@ -9,15 +9,15 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Token {
-  String originText;
-  String defaultText;
+  String origin;
+  String surface;
   String pumsa; // NN, VV, VX etc
   List<Token> decomposed;
 
   public static Token from(String word, String pumsa) {
     Token tk = new Token();
-    tk.originText = word;
-    tk.defaultText = word;
+    tk.origin = word;
+    tk.surface = word;
     tk.pumsa = pumsa;
     return tk;
   }
