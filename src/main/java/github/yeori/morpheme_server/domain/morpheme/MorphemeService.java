@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import github.yeori.morpheme_server.domain.Token;
 import github.yeori.morpheme_server.domain.morpheme.entity.MorphemeDto;
 import github.yeori.morpheme_server.domain.morpheme.entity.TextInput;
+import github.yeori.morpheme_server.service.Jamo;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import scala.collection.JavaConversions;
@@ -76,11 +77,23 @@ public class MorphemeService {
         }
       }
       if (target == null || target.contains(token.inferMainPumsa())) {
+        flushJamo(token);
         tokens.add(token);
       }
     }
     double e = (System.nanoTime() - s) / 1_000_000.0;
 
     return new MorphemeDto(tokens, e);
+  }
+
+  private void flushJamo(Token token) {
+    if (token.isKorean()) {
+      token.setOriginJamo(Jamo.decompose(token.getOrigin()));
+      token.setSurfaceJamo(Jamo.decompose(token.getSurface()));
+    } else {
+      token.setOriginJamo(token.getOrigin().toLowerCase());
+      token.setSurfaceJamo(token.getSurface().toLowerCase());
+    }
+
   }
 }

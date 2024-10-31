@@ -10,7 +10,9 @@ import lombok.ToString;
 @ToString
 public class Token {
   String origin;
+  String originJamo;
   String surface;
+  String surfaceJamo;
   String pumsa; // NN, VV, VX etc
   List<Token> decomposed;
 
@@ -28,5 +30,9 @@ public class Token {
     } else {
       return decomposed.get(0).pumsa;
     }
+  }
+
+  public boolean isKorean() {
+    return this.pumsa.charAt(0) != 'S';
   }
 }
